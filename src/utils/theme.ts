@@ -1,5 +1,9 @@
 import { createContext, useEffect, useMemo, useState } from "react";
-import { createTheme, PaletteMode, useMediaQuery } from "@mui/material";
+import { PaletteMode, useMediaQuery } from "@mui/material";
+import { createTheme } from "@mui/material/styles";
+import { Nunito } from "next/font/google";
+
+const font = Nunito({ subsets: ["latin", "cyrillic"] });
 
 export const ModeContext = createContext({
   toggleMode: (selected: PaletteMode | "system") => {},
@@ -28,6 +32,7 @@ export const useMode = () => {
     () =>
       createTheme({
         palette: { mode: mode === "system" ? prefersMode : mode },
+        typography: { fontFamily: font.style.fontFamily },
       }),
     [mode, prefersMode]
   );
