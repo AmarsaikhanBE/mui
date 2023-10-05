@@ -54,7 +54,7 @@ export default function Header() {
             </Typography>
             <Box sx={{ display: { xs: "none", sm: "block" } }}>
               {navItems.map((item) => (
-                <Button key={item} sx={{ color: "primary.contrastText" }}>
+                <Button key={item} sx={{ color: "white" }}>
                   {item}
                 </Button>
               ))}

@@ -1,8 +1,15 @@
+"use client";
+
 import { MouseEvent } from "react";
 import { Box, Fab, Fade, useScrollTrigger } from "@mui/material";
 import { KeyboardArrowUp } from "@mui/icons-material";
+import { usePathname } from "next/navigation";
 
 export default function ScrollToTOp() {
+  const pathname = usePathname();
+
+  if (pathname.startsWith("/sign")) return null;
+
   const trigger = useScrollTrigger();
 
   const handleClick = (event: MouseEvent<HTMLDivElement>) => {

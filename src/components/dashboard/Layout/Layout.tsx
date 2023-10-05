@@ -167,7 +167,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           overflow: "auto",
         }}
       >
-        <Toolbar />
+        <Toolbar id="header" />
         <Container maxWidth="lg" sx={{ my: 4 }}>
           {children}
           <Typography
