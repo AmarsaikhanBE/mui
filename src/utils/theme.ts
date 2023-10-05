@@ -5,11 +5,11 @@ import { Nunito } from "next/font/google";
 
 const font = Nunito({ subsets: ["latin", "cyrillic"] });
 
-export const ModeContext = createContext({
-  toggleMode: (selected: PaletteMode | "system") => {},
+export const ThemeContext = createContext({
+  toggleColorMode: (selected: PaletteMode | "system") => {},
 });
 
-export const useMode = () => {
+export const useColorMode = () => {
   const prefersMode: PaletteMode = useMediaQuery("(prefers-color-scheme: dark)")
     ? "dark"
     : "light";
@@ -18,9 +18,9 @@ export const useMode = () => {
 
   useEffect(() => setMode(localStorage.getItem("mode") as PaletteMode), []);
 
-  const colorMode = useMemo(
+  const colorModeToggler = useMemo(
     () => ({
-      toggleMode: (selected: PaletteMode | "system") =>
+      toggleColorMode: (selected: PaletteMode | "system") =>
         selected === "system"
           ? setMode(prefersMode)
           : setMode(selected as PaletteMode),
@@ -37,5 +37,5 @@ export const useMode = () => {
     [mode, prefersMode]
   );
 
-  return { theme, colorMode };
+  return { theme, colorModeToggler };
 };
