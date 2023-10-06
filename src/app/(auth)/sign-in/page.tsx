@@ -1,34 +1,49 @@
-"use client";
+'use client';
 
-import { useState, FormEvent } from "react";
+import { useState, FormEvent } from 'react';
 import {
+  Alert,
   Button,
-  Checkbox,
   Container,
   Divider,
   Fab,
-  FormControlLabel,
   IconButton,
   InputAdornment,
+  Link,
   Paper,
+  Slide,
+  Snackbar,
   Stack,
   TextField,
   Typography,
-} from "@mui/material";
-import { Lock, Visibility, VisibilityOff } from "@mui/icons-material";
+} from '@mui/material';
+import { Lock, Visibility, VisibilityOff } from '@mui/icons-material';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 export default function SignIn() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [alert, setAlert] = useState({ open: false, message: '' });
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const data = {
-      email: event.currentTarget.email.value,
-      password: event.currentTarget.password.value,
-      remember: event.currentTarget.remember.checked,
-    };
-    console.log(data);
+    const data = new FormData(event.currentTarget);
+
+    console.log({
+      email: data.get('email'),
+      password: data.get('password'),
+    });
+
+    const res = await signIn('credentials', {
+      email: data.get('email'),
+      password: data.get('password'),
+      redirect: false,
+    });
+    if (res?.error) return setAlert({ open: true, message: res.error });
+
+    router.push('/dashboard');
   };
 
   return (
@@ -36,17 +51,24 @@ export default function SignIn() {
       <Paper sx={{ padding: 4 }} elevation={12}>
         <form onSubmit={handleSubmit}>
           <Stack gap={4}>
-            <Fab color="success" sx={{ mx: "auto" }}>
+            <Fab color="success" sx={{ mx: 'auto' }}>
               <Lock />
             </Fab>
             <Typography variant="h4" textAlign="center">
               Sign in
             </Typography>
-            <TextField id="email" label="E-mail" fullWidth />
             <TextField
-              id="password"
+              name="email"
+              label="E-mail"
+              fullWidth
+              required
+              autoFocus
+            />
+            <TextField
+              name="password"
               label="Password"
-              type={showPassword ? "text" : "password"}
+              required
+              type={showPassword ? 'text' : 'password'}
               fullWidth
               InputProps={{
                 endAdornment: (
@@ -58,10 +80,6 @@ export default function SignIn() {
                 ),
               }}
             />
-            <FormControlLabel
-              label="Remember me"
-              control={<Checkbox id="remember" />}
-            />
             <Button variant="contained" type="submit">
               Sign in
             </Button>
@@ -70,13 +88,26 @@ export default function SignIn() {
                 or
               </Typography>
             </Divider>
-            <Stack direction="row" justifyContent="space-between">
-              <Button href="/sign-reset">Reset password</Button>
-              <Button href="/sign-up">Create account</Button>
-            </Stack>
+            <Link href="/sign-up" variant="body2" color="error" mx="auto">
+              Don't have an account? Sign Up
+            </Link>
           </Stack>
         </form>
       </Paper>
+      <Snackbar
+        open={alert.open}
+        autoHideDuration={10000}
+        onClose={() => setAlert({ open: false, message: '' })}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        TransitionComponent={(props) => <Slide {...props} direction="down" />}
+      >
+        <Alert
+          onClose={() => setAlert({ open: false, message: '' })}
+          severity="error"
+        >
+          {alert.message}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 }

@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useState } from 'react';
 import {
   Button,
   Container,
@@ -8,12 +8,13 @@ import {
   Fab,
   IconButton,
   InputAdornment,
+  Link,
   Paper,
   Stack,
   TextField,
   Typography,
-} from "@mui/material";
-import { Lock, Visibility, VisibilityOff } from "@mui/icons-material";
+} from '@mui/material';
+import { Lock, Visibility, VisibilityOff } from '@mui/icons-material';
 
 export default function SignIn() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -23,15 +24,15 @@ export default function SignIn() {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const data = {
-      firstName: event.currentTarget.firstName.value,
-      lastName: event.currentTarget.lastName.value,
-      email: event.currentTarget.email.value,
-      password: event.currentTarget.password.value,
-      confirmPassword: event.currentTarget.confirmPassword.value,
-    };
+    const data = new FormData(event.currentTarget);
 
-    console.log(data);
+    console.log({
+      firstName: data.get('firstName'),
+      lastName: data.get('lastName'),
+      email: data.get('email'),
+      password: data.get('password'),
+      confirmPassword: data.get('confirmPassword'),
+    });
   };
 
   return (
@@ -39,19 +40,26 @@ export default function SignIn() {
       <Paper sx={{ padding: 4 }} elevation={12}>
         <form onSubmit={handleSubmit}>
           <Stack gap={4}>
-            <Fab color="warning" sx={{ mx: "auto" }}>
+            <Fab color="warning" sx={{ mx: 'auto' }}>
               <Lock />
             </Fab>
             <Typography variant="h4" textAlign="center">
               Create account
             </Typography>
-            <TextField id="firstName" label="First name" fullWidth />
-            <TextField id="lastName" label="Last name" fullWidth />
-            <TextField id="email" label="E-mail" fullWidth />
             <TextField
-              id="password"
+              name="firstName"
+              label="First name"
+              fullWidth
+              required
+              autoFocus
+            />
+            <TextField name="lastName" label="Last name" fullWidth />
+            <TextField name="email" label="E-mail" fullWidth required />
+            <TextField
+              name="password"
               label="Password"
-              type={showPassword ? "text" : "password"}
+              required
+              type={showPassword ? 'text' : 'password'}
               fullWidth
               InputProps={{
                 endAdornment: (
@@ -64,9 +72,10 @@ export default function SignIn() {
               }}
             />
             <TextField
-              id="confirmPassword"
+              name="confirmPassword"
               label="Confirm password"
-              type={showConfirmPassword ? "text" : "password"}
+              required
+              type={showConfirmPassword ? 'text' : 'password'}
               fullWidth
               InputProps={{
                 endAdornment: (
@@ -90,7 +99,9 @@ export default function SignIn() {
                 or
               </Typography>
             </Divider>
-            <Button href="sign-in">Sign in</Button>
+            <Link href="/sign-in" variant="body2" mx="auto">
+              Already have an account? Sign In
+            </Link>
           </Stack>
         </form>
       </Paper>
