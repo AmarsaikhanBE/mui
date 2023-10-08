@@ -1,6 +1,6 @@
-import Copyright from '@/components/dashboard/Copyright';
-import { Stack } from '@mui/material';
-import { ReactNode } from 'react';
+import Copyright from "@/components/Copyright";
+import { Stack } from "@mui/material";
+import { ReactNode } from "react";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (

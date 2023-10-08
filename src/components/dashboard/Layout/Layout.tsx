@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { ReactNode, useEffect, useState } from 'react';
-import { signOut, useSession } from 'next-auth/react';
+import { ReactNode, useEffect, useState } from "react";
+import { signOut, useSession } from "next-auth/react";
 import {
   AppBar,
   Avatar,
@@ -12,33 +12,35 @@ import {
   Divider,
   Drawer,
   IconButton,
-  Link,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
   Menu,
   MenuItem,
+  Stack,
   Toolbar,
   Typography,
   useMediaQuery,
-} from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+} from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import {
   BarChart,
+  Category,
   ChevronLeft,
   Dashboard,
   Layers,
   Logout,
   Menu as MenuIcon,
+  Newspaper,
   People,
   ShoppingCart,
-} from '@mui/icons-material';
-import Copyright from '../Copyright';
+} from "@mui/icons-material";
+import Copyright from "@/components/Copyright";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { breakpoints, spacing, transitions, zIndex } = useTheme();
-  const checkComputer = useMediaQuery(breakpoints.up('md'));
+  const checkComputer = useMediaQuery(breakpoints.up("md"));
   const [open, setOpen] = useState<boolean>(true);
   const { data: session, status } = useSession();
   const [profileMenu, setProfileMenu] = useState<null | HTMLElement>(null);
@@ -46,20 +48,20 @@ export default function Layout({ children }: { children: ReactNode }) {
   useEffect(() => setOpen(checkComputer), [checkComputer]);
 
   return (
-    <Box sx={{ display: 'flex', width: '100%' }}>
+    <Box sx={{ display: "flex", width: "100%" }}>
       <AppBar
         position="absolute"
         color="secondary"
         sx={{
           zIndex: zIndex.drawer + 1,
-          transition: transitions.create(['width', 'margin'], {
+          transition: transitions.create(["width", "margin"], {
             easing: transitions.easing.sharp,
             duration: transitions.duration.leavingScreen,
           }),
           ...(open && {
             marginLeft: 240,
             width: `calc(100% - 240px)`,
-            transition: transitions.create(['width', 'margin'], {
+            transition: transitions.create(["width", "margin"], {
               easing: transitions.easing.sharp,
               duration: transitions.duration.enteringScreen,
             }),
@@ -73,8 +75,8 @@ export default function Layout({ children }: { children: ReactNode }) {
             aria-label="open drawer"
             onClick={() => setOpen(true)}
             sx={{
-              marginRight: '36px',
-              ...(open && { display: 'none' }),
+              marginRight: "36px",
+              ...(open && { display: "none" }),
             }}
           >
             <MenuIcon />
@@ -91,7 +93,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           <Button
             id="profile-menu"
             startIcon={
-              status === 'loading' ? (
+              status === "loading" ? (
                 <CircularProgress size={24} color="inherit" />
               ) : session?.user?.image ? (
                 <Avatar alt="avatar" src={session.user.image} />
@@ -99,34 +101,34 @@ export default function Layout({ children }: { children: ReactNode }) {
                 <Avatar>{session?.user?.name && session?.user?.name[0]}</Avatar>
               )
             }
-            sx={{ color: 'whitesmoke' }}
+            sx={{ color: "whitesmoke" }}
             onClick={(event) => setProfileMenu(event.currentTarget)}
           >
-            <Typography sx={{ display: { xs: 'none', sm: 'block' } }}>
-              {status === 'loading' && 'Loading ...'}
+            <Typography sx={{ display: { xs: "none", sm: "block" } }}>
+              {status === "loading" && "Loading ..."}
               {session && session.user?.name}
             </Typography>
           </Button>
           <Menu
             anchorEl={profileMenu}
             open={Boolean(profileMenu)}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-            MenuListProps={{ 'aria-labelledby': 'profile-menu' }}
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            transformOrigin={{ vertical: "top", horizontal: "right" }}
+            MenuListProps={{ "aria-labelledby": "profile-menu" }}
             PaperProps={{
               sx: {
                 mt: 1,
-                overflow: 'visible',
-                '&:before': {
+                overflow: "visible",
+                "&:before": {
                   content: '""',
-                  display: 'block',
-                  position: 'absolute',
+                  display: "block",
+                  position: "absolute",
                   top: 0,
-                  right: '50%',
+                  right: "50%",
                   width: 10,
                   height: 10,
-                  bgcolor: 'background.paper',
-                  transform: 'translate(50%, -50%) rotate(45deg)',
+                  bgcolor: "background.paper",
+                  transform: "translate(50%, -50%) rotate(45deg)",
                 },
               },
             }}
@@ -149,23 +151,23 @@ export default function Layout({ children }: { children: ReactNode }) {
         variant="permanent"
         open={true}
         sx={{
-          '& .MuiDrawer-paper': {
-            position: 'relative',
-            whiteSpace: 'nowrap',
+          "& .MuiDrawer-paper": {
+            position: "relative",
+            whiteSpace: "nowrap",
             width: 240,
-            transition: transitions.create('width', {
+            transition: transitions.create("width", {
               easing: transitions.easing.sharp,
               duration: transitions.duration.enteringScreen,
             }),
-            boxSizing: 'border-box',
+            boxSizing: "border-box",
             ...(!open && {
-              overflowX: 'hidden',
-              transition: transitions.create('width', {
+              overflowX: "hidden",
+              transition: transitions.create("width", {
                 easing: transitions.easing.sharp,
                 duration: transitions.duration.leavingScreen,
               }),
               width: spacing(7),
-              [breakpoints.up('sm')]: {
+              [breakpoints.up("sm")]: {
                 width: spacing(9),
               },
             }),
@@ -174,9 +176,9 @@ export default function Layout({ children }: { children: ReactNode }) {
       >
         <Toolbar
           sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'flex-end',
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-end",
             px: [1],
           }}
         >
@@ -186,24 +188,34 @@ export default function Layout({ children }: { children: ReactNode }) {
         </Toolbar>
         <Divider />
         <List component="nav">
-          <ListItemButton>
+          <ListItemButton href="/dashboard">
             <ListItemIcon>
               <Dashboard />
             </ListItemIcon>
             <ListItemText primary="Dashboard" />
           </ListItemButton>
-          <ListItemButton>
+          <Divider sx={{ my: 2 }} />
+          <Typography
+            variant="body2"
+            display={open ? "block" : "none"}
+            width="fit-content"
+            mx="auto"
+          >
+            News
+          </Typography>
+          <ListItemButton href="/dashboard/news">
             <ListItemIcon>
-              <ShoppingCart />
+              <Newspaper />
             </ListItemIcon>
-            <ListItemText primary="Orders" />
+            <ListItemText primary="News" />
           </ListItemButton>
-          <ListItemButton>
+          <ListItemButton href="/dashboard/news/categories">
             <ListItemIcon>
-              <People />
+              <Category />
             </ListItemIcon>
-            <ListItemText primary="Customers" />
+            <ListItemText primary="Categories" />
           </ListItemButton>
+          <Divider sx={{ my: 2 }} />
           <ListItemButton>
             <ListItemIcon>
               <BarChart />
@@ -222,18 +234,20 @@ export default function Layout({ children }: { children: ReactNode }) {
         component="main"
         sx={{
           backgroundColor: (theme) =>
-            theme.palette.mode === 'light'
+            theme.palette.mode === "light"
               ? theme.palette.grey[100]
               : theme.palette.grey[900],
           flexGrow: 1,
-          height: '100vh',
-          overflow: 'auto',
+          height: "100vh",
+          overflow: "auto",
         }}
       >
         <Toolbar id="header" />
-        <Container maxWidth="lg" sx={{ my: 4 }}>
-          {children}
-          <Copyright/>
+        <Container maxWidth="lg">
+          <Stack gap={5} py={5} sx={{ minHeight: "calc(100vh - 120px)" }}>
+            {children}
+          </Stack>
+          <Copyright />
         </Container>
       </Box>
     </Box>
